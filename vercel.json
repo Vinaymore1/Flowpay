@@ -1,0 +1,22 @@
+{
+    "projects": [
+      {
+        "src": "frontend",
+        "use": "@vercel/static-build",
+        "env": {
+          "VITE_BACKEND_URL": "https://your-backend-url.vercel.app/api/v1"
+        }
+      },
+      {
+        "src": "backend",
+        "use": "@vercel/node",
+        "env": {
+          "MONGO_URL": "mongodb+srv://admin:rama%402531@admin.npwa3tv.mongodb.net/test?retryWrites=true&w=majority&appName=admin",
+          "JWT_SECRET": "123",
+          "PORT": "3000",
+          "FRONTEND_URL": "https://your-frontend-url.vercel.app"
+        }
+      }
+    ]
+  }
+  
