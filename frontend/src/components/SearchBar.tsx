@@ -58,12 +58,13 @@ const SearchBar: FC<SearchBarProps> = ({ setRecepient }) => {
 
   const handleUserItemClick = (user: User) => {
     setFilter(`${user.firstName} ${user.lastName}`);
-    setRecepient(user);
+    setRecepient(user); // Set the selected recipient
     setSearchResultsDivOpen(false);
   };
 
   const handleClearSearchBar = () => {
     setFilter("");
+    setRecepient(null); // Clear the recipient when search is cleared
   };
 
   return (

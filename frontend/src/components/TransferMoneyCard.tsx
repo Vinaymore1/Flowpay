@@ -28,7 +28,7 @@ interface TransferMoneyCardProps {
 }
 
 const formSchema = z.object({
-  userid: z.string().nonempty("User ID is required"),
+  userid: z.string().nonempty("User ID is required"), // Ensure userid is required
   amount: z.string().min(1, "Amount should not be less than ₹0"),
 });
 
@@ -37,19 +37,21 @@ const TransferMoneyCard: FC<TransferMoneyCardProps> = ({ recepient }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userid: "",
+      userid: "", // Start with an empty userid
       amount: "",
     },
   });
 
+  // Update the user ID if a recipient is selected
+  if (recepient) {
+    form.setValue("userid", recepient._id);
+  }
+
   const transferMoney = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Convert amount to number
       const amount = Number(values.amount);
-      const userId = values.userid; // Get the user ID from the form
-
       const res = await axiosInstance.post("/account/transfer", {
-        to: userId, // Use the user ID from the form
+        to: values.userid, // Use the form's userid field
         amount: amount,
       });
 
@@ -68,7 +70,7 @@ const TransferMoneyCard: FC<TransferMoneyCardProps> = ({ recepient }) => {
 
   return (
     <div className="bg-background w-full p-4 md:p-8 rounded-lg relative overflow-hidden">
-      <h1 className="font-semibold text-xl mb-4">Recepient details</h1>
+      <h1 className="font-semibold text-xl mb-4">Recipient details</h1>
       <div className="w-[70%] md:w-[40%]">
         <Form {...form}>
           <form
@@ -83,15 +85,15 @@ const TransferMoneyCard: FC<TransferMoneyCardProps> = ({ recepient }) => {
                   <FormLabel>User ID</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="User ID of recepient"
+                      placeholder="User ID of recipient"
                       {...field}
+                      onChange={(e) => field.onChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="amount"
@@ -119,7 +121,6 @@ const TransferMoneyCard: FC<TransferMoneyCardProps> = ({ recepient }) => {
           </form>
         </Form>
       </div>
-
       <img
         src="/assets/llleaves.svg"
         alt="pattern"
@@ -130,4 +131,3 @@ const TransferMoneyCard: FC<TransferMoneyCardProps> = ({ recepient }) => {
 };
 
 export default TransferMoneyCard;
-
